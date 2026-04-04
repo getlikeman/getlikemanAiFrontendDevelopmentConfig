@@ -4,11 +4,12 @@ My basic skills and mcp setup for react front-end developing
 
 ## Included MCP server
 
-The current MCP configuration exposes one local Figma Desktop MCP endpoint:
+The current MCP configuration exposes a local Figma Desktop MCP endpoint and the official MCP memory server:
 
-| Server  | Reference                                                                                                                      |
-|---------|--------------------------------------------------------------------------------------------------------------------------------|
-| `Figma` | Connects the agent to the local Figma Desktop MCP bridge for design context, screenshots, assets, and related Figma workflows. | https://help.figma.com/hc/en-us/articles/35281186390679-Figma-MCP-collection-How-to-set-up-the-Figma-MCP-server-for-desktop |
+| Server   | Reference                                                                                                                       |
+|----------|---------------------------------------------------------------------------------------------------------------------------------|
+| `Figma`  | Connects the agent to the local Figma Desktop MCP bridge for design context, screenshots, assets, and related Figma workflows. | https://help.figma.com/hc/en-us/articles/35281186390679-Figma-MCP-collection-How-to-set-up-the-Figma-MCP-server-for-desktop |
+| `memory` | Adds persistent local knowledge-graph memory via the official MCP memory server package.                                        | https://github.com/modelcontextprotocol/servers/tree/main/src/memory |
 
 Current `mcp.json`:
 
@@ -17,6 +18,32 @@ Current `mcp.json`:
   "mcpServers": {
     "Figma": {
       "url": "http://127.0.0.1:3845/mcp"
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
+    }
+  }
+}
+```
+
+Optional custom memory file path:
+
+```json
+{
+  "mcpServers": {
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "env": {
+        "MEMORY_FILE_PATH": "/path/to/custom/memory.jsonl"
+      }
     }
   }
 }
@@ -39,7 +66,7 @@ Current `mcp.json`:
 ### Requirements
 - Figma Desktop installed, signed in, and configured to expose the local MCP endpoint at `http://127.0.0.1:3845/mcp`.
 - The Figma Desktop app running when you want to use the `Figma` MCP server.
-- Node.js 18+ with `npm` or `npx` available for CLI-backed skills.
+- Node.js 18+ with `npm` or `npx` available for CLI-backed skills and the `memory` MCP server.
 
 1. Install Figma Desktop and enable the Figma Desktop MCP server so the local endpoint `http://127.0.0.1:3845/mcp` is available.
 2. Copy or merge the contents of [`mcp.json`](./mcp.json) into the MCP configuration used by your client. If your client supports project-local MCP files, you can keep this file in the repository root as-is.
@@ -63,7 +90,7 @@ Current `mcp.json`:
    - keep this repository in place and point your tool to the local `skills/` directory, or
    - copy the specific skill folders you want into the skill directory used by your agent.
 5. Restart the IDE or agent so it reloads MCP servers and local skills.
-6. Verify setup by checking that the `Figma` MCP server is available, `ctx7 --version` works, `agent-browser --version` works, and the desired skills appear in the agent's skill list.
+6. Verify setup by checking that the `Figma` and `memory` MCP servers are available, `ctx7 --version` works, `agent-browser --version` works, and the desired skills appear in the agent's skill list.
 
 ## Recommended usage
 
@@ -72,3 +99,4 @@ Current `mcp.json`:
 - Use `find-docs` before answering library-specific API or setup questions.
 - Use `agent-browser` for browser automation tasks that require navigation or interaction.
 - Use `vercel-react-best-practices` during React or Next.js implementation and review.
+- Use `memory` when you want the agent to persist user preferences, entities, and observations across sessions.

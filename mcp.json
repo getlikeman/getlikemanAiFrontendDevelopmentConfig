@@ -2,6 +2,13 @@
   "mcpServers": {
     "Figma": {
       "url": "http://127.0.0.1:3845/mcp"
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
     }
   }
 }
